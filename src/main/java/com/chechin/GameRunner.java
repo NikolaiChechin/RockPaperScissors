@@ -1,21 +1,52 @@
 package com.chechin;
 
-import java.util.Random;
-
 /**
  * Created by chechin on 31.08.2016.
  */
 public class GameRunner {
 
-    private static final Random random = new Random();
+    private int runCount;
+    private int playerAWinCount;
+    private int playerBWinCount;
+    private int tieCount;
+    private boolean gameFinished;
 
-    public static void main(String[] args) {
-        int playerAWinCount = 0;
-        int playerBWinCount = 0;
-        int tieCount = 0;
-        for (int i = 0; i < 100; i++) {
-            Move playerAMove = Move.PAPER;
-            Move playerBMove = Move.valueOf(random.nextInt(3));
+    public int getRunCount() {
+        return runCount;
+    }
+
+    public void setRunCount(int runCount) {
+        this.runCount = runCount;
+    }
+
+    public int getPlayerAWinCount() {
+        if(gameFinished) {
+            return playerAWinCount;
+        } else {
+            throw new IllegalStateException("The game is not finished yet!");
+        }
+    }
+
+    public int getPlayerBWinCount() {
+        if(gameFinished) {
+            return playerBWinCount;
+        } else {
+            throw new IllegalStateException("The game is not finished yet!");
+        }
+    }
+
+    public int getTieCount() {
+        if(gameFinished) {
+            return tieCount;
+        } else {
+            throw new IllegalStateException("The game is not finished yet!");
+        }
+    }
+
+    public void runGame(){
+        for (int i = 0; i < runCount; i++) {
+            Move playerAMove = Player.PLAYER_A.getMove();
+            Move playerBMove = Player.PLAYER_B.getMove();
             Game game = new Game(playerAMove, playerBMove);
             Player winner = game.getWinner();
             if (winner == null) {
@@ -26,6 +57,16 @@ public class GameRunner {
                 playerBWinCount++;
             }
         }
+        gameFinished = true;
+    }
+
+    public static void main(String[] args) {
+        GameRunner gameRunner = new GameRunner();
+        gameRunner.setRunCount(100);
+        gameRunner.runGame();
+        int playerAWinCount = gameRunner.getPlayerAWinCount();
+        int playerBWinCount = gameRunner.getPlayerBWinCount();
+        int tieCount = gameRunner.getTieCount();
         System.out.println("Player A wins " + playerAWinCount + " of 100 games");
         System.out.println("Player B wins " + playerBWinCount + " of 100 games");
         System.out.println("Tie: " + tieCount + " of 100 games");
